@@ -1,21 +1,8 @@
 workspace(
-    name = "nestjs-bazel-example",
+    name = "nestjs-bazel-monorepo-example",
 )
 
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
-
-http_archive(
-    name = "rules_nodejs",
-    sha256 = "8fc8e300cb67b89ceebd5b8ba6896ff273c84f6099fc88d23f24e7102319d8fd",
-    urls = ["https://github.com/bazelbuild/rules_nodejs/releases/download/5.8.4/rules_nodejs-core-5.8.4.tar.gz"],
-)
-
-load("@rules_nodejs//nodejs:repositories.bzl", "nodejs_register_toolchains")
-
-nodejs_register_toolchains(
-    name = "nodejs",
-    node_version = "18.17.0",
-)
 
 http_archive(
     name = "aspect_rules_js",
@@ -27,6 +14,13 @@ http_archive(
 load("@aspect_rules_js//js:repositories.bzl", "rules_js_dependencies")
 
 rules_js_dependencies()
+
+load("@rules_nodejs//nodejs:repositories.bzl", "nodejs_register_toolchains")
+
+nodejs_register_toolchains(
+    name = "nodejs",
+    node_version = "18.17.0",
+)
 
 
 # For convenience, npm_translate_lock does this call automatically.
@@ -56,6 +50,10 @@ npm_translate_lock(
     npmrc = "//:.npmrc",
 )
 
+load("@npm//:repositories.bzl", "npm_repositories")
+
+npm_repositories()
+
 http_archive(
     name = "aspect_rules_swc",
     sha256 = "8eb9e42ed166f20cacedfdb22d8d5b31156352eac190fc3347db55603745a2d8",
@@ -73,11 +71,6 @@ swc_register_toolchains(
     name = "swc",
     swc_version = LATEST_SWC_VERSION,
 )
-
-
-load("@npm//:repositories.bzl", "npm_repositories")
-
-npm_repositories()
 
 http_archive(
     name = "aspect_rules_ts",

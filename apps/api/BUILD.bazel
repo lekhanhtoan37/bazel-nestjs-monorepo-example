@@ -37,6 +37,9 @@ js_binary(
     name = "bin",
     data = [
         ":api",
+
+        "//:node_modules/regenerator-runtime",
     ],
     entry_point = "src/main.js",
+    log_level = "debug",
 )
