@@ -1,7 +1,9 @@
 load("@aspect_rules_js//js:defs.bzl", "js_library")
 load("@npm//:defs.bzl", "npm_link_all_packages")
 load("@aspect_rules_ts//ts:defs.bzl", "ts_config", "ts_project")
+load("@aspect_bazel_lib//lib:bazelrc_presets.bzl", "write_aspect_bazelrc_presets")
 
+write_aspect_bazelrc_presets(name = "update_aspect_bazelrc_presets")
 
 # Link all packages from the /WORKSPACE npm_translate_lock(name = "npm") and also packages from
 # manual /WORKSPACE npm_import rules to bazel-bin/node_modules as well as the virtual store
