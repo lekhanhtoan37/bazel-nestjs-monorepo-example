@@ -1,0 +1,58 @@
+load("@aspect_rules_ts//ts:defs.bzl", "ts_config", "ts_project")
+load("@aspect_rules_js//npm:defs.bzl", "npm_package")
+load("@aspect_rules_swc//swc:defs.bzl", "swc")
+load("@bazel_skylib//lib:partial.bzl", "partial")
+# load("//tools:defs.bzl", "ng_lib")
+
+package(default_visibility = ["//visibility:public"])
+
+# ng_lib(
+#     name = "auth",
+#     deps = [
+#         ":lib_auth_tsconfig",
+#         "//:node_modules/@nestjs/common",
+#         "//:node_modules/@nestjs/core",
+#         "//:node_modules/@types/node",
+#     ],
+# )
+
+ts_config(
+    name = "lib_auth_tsconfig",
+    src = "tsconfig.lib.json",
+)
+
+ts_project(
+    name = "lib_auth",
+    srcs = glob(
+        ["src/**/*.ts"],
+        ["src/**/*.spec.ts"],
+    ),
+    declaration = True,
+    extends = "//:root_tsconfig",
+    incremental = True,
+    source_map = True,
+    # transpiler = "tsc",
+    transpiler = partial.make(
+        swc,
+        swcrc = "//:.swcrc",
+    ),
+    tsconfig = ":lib_auth_tsconfig",
+    deps = [
+        ":lib_auth_tsconfig",
+        "//:node_modules/@nestjs/common",
+        "//:node_modules/@nestjs/core",
+        "//:node_modules/@types/node",
+    ]
+)
+
+# make this library available via node_modules
+npm_package(
+    name = "auth",
+    srcs = [
+        "package.json",
+        ":lib_auth",
+    ],
+    # This is a perf improvement; the default will be flipped to False in rules_js 2.0
+    include_runfiles = False,
+    visibility = ["//visibility:public"],
+)
