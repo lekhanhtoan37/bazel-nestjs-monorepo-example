@@ -32,3 +32,17 @@ bazel build //apps/api:bin
 ```bash
 bazel run //apps/api:bin
 ```
+
+## Test
+
+### Test single lib
+
+```bash
+bazel test //libs/auth:test
+```
+
+### Test all .spec files
+
+```bash
+bazel test --test_lang_filters=jest //...
+```
