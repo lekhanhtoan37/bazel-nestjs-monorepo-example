@@ -4,6 +4,8 @@
 # Docs: https://bazel.build/reference/command-line-reference#flag--incompatible_remote_results_ignore_disk
 build --incompatible_remote_results_ignore_disk
 
+build --remote_accept_cached
+
 # Directories used by sandboxed non-worker execution may be reused to avoid unnecessary setup costs.
 # Save time on Sandbox creation and deletion when many of the same kind of action run during the
 # build.

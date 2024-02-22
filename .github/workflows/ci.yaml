@@ -63,8 +63,8 @@ jobs:
         uses: actions/cache@v4
         with:
           path: |
-            "/home/runner/.cache/bazel/_bazel_runner"
-            "/home/runner/.cache/bazel/_bazel_runner/repos"
+            /home/runner/.cache/bazel
+            /home/runner/.cache/bazel/repos
           key: bazel
 
         # with:
@@ -77,10 +77,20 @@ jobs:
       - name: Check bazel cache exist
         id: has-cache-exist
         run: |
-          echo "$(test -d /home/runner/.cache/bazel/_bazel_runner && echo true || echo false)"
-          echo "$(test -d /home/runner/.cache/bazel/_bazel_runner/repos && echo true || echo false)"
+          echo "$(test -d /home/runner/.cache/bazel && echo true || echo false)"
+          echo "$(test -d /home/runner/.cache/bazel/repos && echo true || echo false)"
 
-      - name: bazel test --test_lang_filters=jest //...
+      - name: Build
+        id: bazel-build
+        run: |
+          bazel \
+            --bazelrc=$GITHUB_WORKSPACE/.aspect/bazelrc/ci.bazelrc \
+            --bazelrc=$GITHUB_WORKSPACE/.github/workflows/ci.bazelrc \
+            build /... 
+          bazel info
+
+      - name: Test
+        id: bazel-test
         working-directory: ${{ matrix.folder }}
         if: steps.has_test_sh.outputs.files_exists != 'true'
         run: |
@@ -88,5 +98,5 @@ jobs:
             --bazelrc=$GITHUB_WORKSPACE/.aspect/bazelrc/ci.bazelrc \
             --bazelrc=$GITHUB_WORKSPACE/.github/workflows/ci.bazelrc \
             test //${{ matrix.folder }}/... 
-          bazel info | grep "cache"
+          bazel info
   
