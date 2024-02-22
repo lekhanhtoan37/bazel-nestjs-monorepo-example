@@ -55,9 +55,9 @@ jobs:
           - 'libs'
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: matrix-prep-os
       - name: Mount bazel caches
-        uses: actions/cache@v3
+        uses: matrix-prep-os
         with:
           path: |
             "~/.cache/bazel"
