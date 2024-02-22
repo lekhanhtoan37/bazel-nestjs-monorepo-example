@@ -15,7 +15,7 @@ on:
 
 # Bazelisk will download bazel to here, ensure it is cached between runs.
 env:
-  XDG_CACHE_HOME: ~/.cache/bazel-repo
+  XDG_CACHE_HOME: ~/.cache/bazel/repos
 
 
 jobs:
@@ -64,7 +64,7 @@ jobs:
         with:
           path: |
             "~/.cache/bazel"
-            "~/.cache/bazel-repo"
+            "~/.cache/bazel/repos"
           key: bazel-cache-${{ matrix.folder }}-${{ hashFiles('**/BUILD.bazel', '**/*.bzl', 'WORKSPACE') }}
           restore-keys: bazel-cache-
       
@@ -72,7 +72,7 @@ jobs:
         id: has-cache-exist
         run: |
           echo "$(test -d ~/.cache/bazel && echo true || echo false)"
-          echo "$(test -d ~/.cache/bazel-repo && echo true || echo false)"
+          echo "$(test -d ~/.cache/bazel/repos && echo true || echo false)"
 
       - name: bazel test --test_lang_filters=jest //...
         working-directory: ${{ matrix.folder }}
@@ -82,4 +82,5 @@ jobs:
             --bazelrc=$GITHUB_WORKSPACE/.aspect/bazelrc/ci.bazelrc \
             --bazelrc=$GITHUB_WORKSPACE/.github/workflows/ci.bazelrc \
             test //${{ matrix.folder }}/... 
+          bazel info | grep "cache"
   
