@@ -61,12 +61,17 @@ jobs:
       - name: Mount bazel caches
         id: mount-cache-bazel
         uses: actions/cache@v4
+        # with:
+        #   path: |
+        #     /home/runner/.cache/bazel
+        #     /home/runner/.cache/bazel/repos
+        #   key: bazel
 
         with:
           path: |
-            "/home/runner/.cache/bazel"
-            "/home/runner/.cache/bazel/repos"
-          key: bazel-cache-${{ matrix.folder }}-${{ hashFiles('**/BUILD.bazel', '**/*.bzl', 'WORKSPACE') }}
+            /home/runner/.cache/bazel
+            /home/runner/.cache/bazel/repos
+          key: bazel-cache-${{ matrix.folder }}-${{ hashFiles('BUILD.bazel', '**/*.bzl', 'WORKSPACE') }}
           restore-keys: bazel-cache-
       
       - name: Check bazel cache exist
@@ -82,6 +87,7 @@ jobs:
             --bazelrc=$GITHUB_WORKSPACE/.aspect/bazelrc/ci.bazelrc \
             --bazelrc=$GITHUB_WORKSPACE/.github/workflows/ci.bazelrc \
             build /... 
+          bazel info
 
       - name: Test
         id: bazel-test
@@ -92,4 +98,5 @@ jobs:
             --bazelrc=$GITHUB_WORKSPACE/.aspect/bazelrc/ci.bazelrc \
             --bazelrc=$GITHUB_WORKSPACE/.github/workflows/ci.bazelrc \
             test //${{ matrix.folder }}/... 
+          bazel info
   
