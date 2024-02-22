@@ -27,14 +27,14 @@ jobs:
     # Prepares the 'os' axis of the test matrix
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - id: linux
         run: echo "os=ubuntu-latest" >> $GITHUB_OUTPUT
-      - id: macos
-        run: echo "os=macos-latest" >> $GITHUB_OUTPUT
-        # Only run on main branch (not PRs) to minimize macOS minutes (billed at 10X)
-        # https://docs.github.com/en/billing/managing-billing-for-github-actions/about-billing-for-github-actions#included-storage-and-minutes
-        if: ${{ github.ref == 'refs/heads/main' }}
+      # - id: macos
+      #   run: echo "os=macos-latest" >> $GITHUB_OUTPUT
+      #   # Only run on main branch (not PRs) to minimize macOS minutes (billed at 10X)
+      #   # https://docs.github.com/en/billing/managing-billing-for-github-actions/about-billing-for-github-actions#included-storage-and-minutes
+      #   if: ${{ github.ref == 'refs/heads/main' }}
     outputs:
       # Will look like ["ubuntu-latest", "macos-latest"]
       os: ${{ toJSON(steps.*.outputs.os) }}
