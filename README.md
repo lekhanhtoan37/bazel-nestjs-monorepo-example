@@ -1,6 +1,7 @@
 # Overview
 
-* An example of using bazel to build/run/test nestjs monorepo
+* Using bazel to build/run/test nestjs monorepo
+* CI flow for building and testing with cache (github action)
 
 # Dependency
 
