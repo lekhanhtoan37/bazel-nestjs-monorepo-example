@@ -65,8 +65,14 @@ jobs:
           path: |
             "/home/runner/.cache/bazel"
             "/home/runner/.cache/bazel/repos"
-          key: bazel-cache-${{ matrix.folder }}-${{ hashFiles('**/BUILD.bazel', '**/*.bzl', 'WORKSPACE') }}
-          restore-keys: bazel-cache-
+          key: bazel
+
+        # with:
+        #   path: |
+        #     "/home/runner/.cache/bazel"
+        #     "/home/runner/.cache/bazel/repos"
+        #   key: bazel-cache-${{ matrix.folder }}-${{ hashFiles('**/BUILD.bazel', '**/*.bzl', 'WORKSPACE') }}
+        #   restore-keys: bazel-cache-
       
       - name: Check bazel cache exist
         id: has-cache-exist
