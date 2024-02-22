@@ -15,7 +15,7 @@ on:
 
 # Bazelisk will download bazel to here, ensure it is cached between runs.
 env:
-  XDG_CACHE_HOME: /home/runner/.cache/bazel/repos
+  XDG_CACHE_HOME: /home/runner/.cache/bazel/_bazel_runner/repos
 
 
 jobs:
@@ -63,8 +63,8 @@ jobs:
         uses: actions/cache@v4
         with:
           path: |
-            "/home/runner/.cache/bazel"
-            "/home/runner/.cache/bazel/repos"
+            "/home/runner/.cache/bazel/_bazel_runner"
+            "/home/runner/.cache/bazel/_bazel_runner/repos"
           key: bazel
 
         # with:
@@ -77,8 +77,8 @@ jobs:
       - name: Check bazel cache exist
         id: has-cache-exist
         run: |
-          echo "$(test -d /home/runner/.cache/bazel && echo true || echo false)"
-          echo "$(test -d /home/runner/.cache/bazel/repos && echo true || echo false)"
+          echo "$(test -d /home/runner/.cache/bazel/_bazel_runner && echo true || echo false)"
+          echo "$(test -d /home/runner/.cache/bazel/_bazel_runner/repos && echo true || echo false)"
 
       - name: bazel test --test_lang_filters=jest //...
         working-directory: ${{ matrix.folder }}
