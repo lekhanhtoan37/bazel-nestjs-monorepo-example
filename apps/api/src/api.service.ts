@@ -1,4 +1,4 @@
-import { AuthService } from '@app/auth'
+import { AuthService } from '@app/auth/auth.service'
 import { Injectable } from '@nestjs/common'
 
 @Injectable()

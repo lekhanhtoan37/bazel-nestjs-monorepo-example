@@ -15,11 +15,11 @@ ts_project(
     incremental = True,
     source_map = True,
     declaration = True,
-    # transpiler = "tsc",
-    transpiler = partial.make(
-        swc,
-        swcrc = "//:.swcrc",
-    ),
+    transpiler = "tsc",
+    # transpiler = partial.make(
+    #     swc,
+    #     swcrc = "//:.swcrc",
+    # ),
     tsconfig = ":api_tsconfig",
     deps = [
         "//:node_modules/@nestjs/common",
