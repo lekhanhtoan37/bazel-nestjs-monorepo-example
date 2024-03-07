@@ -15,11 +15,12 @@ ts_config(
 
 ts_project(
     name = "lib_auth",
-    srcs = glob(
-        include=["src/**/*.ts"],
-        # exclude=["node_modules", "dist", "test", "src/**/*.spec.ts"],
-        exclude=["node_modules", "dist"],
-    ),
+    # srcs = glob(
+    #     include=["src/**/*.ts"],
+    #     # exclude=["node_modules", "dist", "test", "src/**/*.spec.ts"],
+    #     # exclude=["node_modules", "dist"],
+    # ),
+    srcs = ["src/auth.service.ts", "src/auth.module.ts", "src/index.ts"],
     declaration = True,
     incremental = True,
     source_map = True,
@@ -45,41 +46,39 @@ ts_project(
     ]
 )
 
-# ts_project(
-#     name = "test_lib_auth",
-#     srcs = glob(
-#         include=["src/**/*.spec.ts"],
-#     ),
-#     declaration = True,
-#     incremental = True,
-#     source_map = True,
-#     transpiler = "tsc",
-#     root_dir = "src",
-#     out_dir = "",
-#     # transpiler = partial.make(
-#     #     swc,
-#     #     swcrc = "//:.swcrc",
-#     # ),
-#     # visibility = ["//visibility:private"],
-#     tsconfig = {},
-#     extends = "//:root_tsconfig",
-#     deps = [
-#         # ":lib_auth",
-
-#         "//:node_modules/@nestjs/testing",
-#         "//:node_modules/jest",
-#         "//:node_modules/@types/jest",
-#         "//:node_modules/ts-jest",
-#     ]
-# )
+ts_project(
+    name = "test_lib_auth",
+    srcs = ["src/auth.service.spec.ts", "src/auth.service.ts", "src/auth.module.ts", "src/index.ts"],
+    declaration = True,
+    incremental = True,
+    source_map = True,
+    transpiler = "tsc",
+    root_dir = "src",
+    out_dir = "test",
+    # transpiler = partial.make(
+    #     swc,
+    #     swcrc = "//:.swcrc",
+    # ),
+    visibility = ["//visibility:private"],
+    tsconfig = {},
+    extends = "//:root_tsconfig",
+    data = [":lib_auth",],
+    validate = False,
+    deps = [
+        ":lib_auth",
+        "//:node_modules/@nestjs/testing",
+        "//:node_modules/jest",
+        "//:node_modules/@types/jest",
+        "//:node_modules/ts-jest",
+    ]
+)
 
 jest_test(
     name = "test",
     config = "//:root_package_json",
     node_modules = "//:node_modules",
     data = [
-        # ":test_lib_auth",
-        ":lib_auth",
+        ":test_lib_auth",
     ],
 )
 

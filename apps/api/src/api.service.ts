@@ -5,7 +5,7 @@ import { Injectable } from '@nestjs/common'
 export class ApiService {
   constructor(private readonly authService: AuthService) {}
   getHello(): string {
-    return 'Hello World';
+    return 'Hello World!';
   }
 
   getHelloFromAuth(): string {

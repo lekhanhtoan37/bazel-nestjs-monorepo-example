@@ -1,5 +1,6 @@
 load("@aspect_rules_ts//ts:defs.bzl", "ts_config", "ts_project")
 load("@aspect_rules_js//js:defs.bzl", "js_binary")
+load("@aspect_rules_jest//jest:defs.bzl", "jest_test")
 load("@aspect_rules_swc//swc:defs.bzl", "swc")
 load("@bazel_skylib//lib:partial.bzl", "partial")
 
@@ -10,16 +11,15 @@ ts_config(
 
 ts_project(
     name = "api",
-    srcs = glob(["src/**/*.ts"], ["src/**/*.spec.ts"]),
+    srcs = glob(include = ["src/**/*.ts"], exclude = ["src/**/*.spec.ts"]),
     extends = "//:root_tsconfig",
     incremental = True,
     source_map = True,
     declaration = True,
-    transpiler = "tsc",
-    # transpiler = partial.make(
-    #     swc,
-    #     swcrc = "//:.swcrc",
-    # ),
+    transpiler = partial.make(
+        swc,
+        swcrc = "//:.swcrc",
+    ),
     tsconfig = ":api_tsconfig",
     deps = [
         "//:node_modules/@nestjs/common",
@@ -42,4 +42,44 @@ js_binary(
     ],
     entry_point = "src/main.js",
     log_level = "debug",
+)
+
+ts_project(
+    name = "api_test",
+    srcs = glob(include = ["src/**/*.ts"]),
+    extends = "//:root_tsconfig",
+    incremental = True,
+    source_map = True,
+    declaration = True,
+    transpiler = "tsc",
+    root_dir = "src",
+    out_dir = "test",
+
+    # transpiler = partial.make(
+    #     swc,
+    #     swcrc = "//:.swcrc",
+    # ),
+    tsconfig = {},
+    deps = [
+        "//:node_modules/@nestjs/common",
+        "//:node_modules/@types/node",
+        "//:node_modules/@nestjs/core",
+
+        "//:node_modules/@nestjs/testing",
+        "//:node_modules/jest",
+        "//:node_modules/@types/jest",
+        "//:node_modules/ts-jest",
+
+        # For lib in monorepo with import alias (e.g. @app/auth which defined in tsconfig.json)
+        "//:node_modules/@app/auth",
+    ],
+)
+
+jest_test(
+    name = "test",
+    config = "//:root_package_json",
+    node_modules = "//:node_modules",
+    data = [
+        ":api_test",
+    ],
 )
